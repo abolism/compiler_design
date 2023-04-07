@@ -1,3 +1,8 @@
+"Abolfazl Eshagh 99101105"
+"Zahra Alipour"
+
+
+
 from scanner import Scanner
 from dfa import getDfa
 if __name__ == "__main__":
