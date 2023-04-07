@@ -59,3 +59,6 @@ class Scanner:
 
     def get_dfa(self):
         return self.dfa
+
+    def change(self):
+        print("this is the change")
