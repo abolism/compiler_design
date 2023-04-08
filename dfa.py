@@ -384,9 +384,27 @@
 #     current_dfa_list_length_minus_sixteen = current_dfa_list_length - 16
 #     current_dfa_list_length_minus_seventeen = current_dfa_list
 
+# from dfaByType import State_Type
+from enum import Enum, auto
+class State_Type(Enum):
+    SIMPLE = 1
+    START = 2
+    ACCEPT = 3
+    ACCEPT_WITH_EXTRA_CHAR = 4
+    ACCEPT_ID_OR_KEYWORD = 5
+    ERROR = 6
+    ERROR_WITH_EXTRA_CHAR = 7
+
 from typing import List, Dict, Tuple
 
-from ENUMS import StateTypes, DfaPartTypes, ErrorTypes, CharTypes
+from ENUMS import StateTypes, TokenTypes
+# from dfaByType import ErrorType
+class ErrorType(Enum):
+    SIMPLE = 1
+    INVALID_NUMBER = 'Invalid number'
+    UNMATCHED_COMMENT = 'Unmatched comment'
+    INVALID_INPUT = 'Invalid input'
+    UNCLOSED_COMMENT = 'Unclosed comment'
 
 KEYWORDs = ["if", "else", "void", "int", "repeat", "break", "until", "return"]
 
@@ -400,8 +418,8 @@ class StateType:
 
 
 class State:
-    def __init__(self, id: int, transitions: Dict[str, int], type: StateTypes, part: DfaPartTypes = None,
-                 error: ErrorTypes = None):
+    def __init__(self, id: int, transitions: Dict[str, int], type: State_Type, part: TokenTypes = None,
+                 error: ErrorType = None):
         self.id = id
         self.transitions = transitions
         self.state_type = type
@@ -417,16 +435,16 @@ class State:
             if self.state_type == StateTypes.ACCEPT_WITH_EXTRA_CHAR:
                 extra_char = word[-1]
                 word = word[:-1]
-            if self.part_type == DfaPartTypes.num:
+            if self.part_type == TokenTypes.num:
                 return "NUM", word, extra_char, None
-            elif self.part_type == DfaPartTypes.idKeyword:
+            elif self.part_type == TokenTypes.idKeyword:
                 if word in KEYWORDs:
                     return "KEYWORD", word, extra_char, None
                 else:
                     return "ID", word, extra_char, None
-            elif self.part_type == DfaPartTypes.whitespace:
+            elif self.part_type == TokenTypes.whitespace:
                 return "WHITESPACE", word, extra_char, None
-            elif self.part_type == DfaPartTypes.symbol:
+            elif self.part_type == TokenTypes.symbol:
                 return "SYMBOL", word, extra_char, None
             else:
                 if self.state_type != StateTypes.SIMPLE:
@@ -434,7 +452,7 @@ class State:
                 else:
                     if len(word) > 7:
                         word = word[0:7] + '...'
-                    return "ERROR", word, '', ErrorTypes.UNCLOSED_COMMENT.value
+                    return "ERROR", word, '', ErrorType.UNCLOSED_COMMENT.value
         elif self.state_type == StateTypes.ERROR or self.state_type == StateTypes.ERROR_WITH_EXTRA_CHAR:
             extra_char = ''
             if self.state_type == StateTypes.ERROR_WITH_EXTRA_CHAR:
@@ -457,7 +475,7 @@ class DFA:
         if should_update:
             self.update_transactions()
         else:
-            self.trash = State(-1, {}, StateTypes.ERROR, None, ErrorTypes.INVALID_INPUT.value)
+            self.trash = State(-1, {}, StateTypes.ERROR, None, ErrorType.INVALID_INPUT.value)
 
     def update_transactions(self):
         for state in self.states:
@@ -468,7 +486,7 @@ class DFA:
     def get_next(self, state: State, alphabet: str) -> State:
         if alphabet in state.transitions.keys():
             return state.transitions[alphabet]
-        if state.part_type == DfaPartTypes.comment:
+        if state.part_type == TokenTypes.comment:
             return state.transitions['a']
         return self.trash
 
@@ -476,7 +494,7 @@ class DFA:
         return self.start_state
 
 
-def merge_dfas(dfas: List[DFA]) -> DFA:
+def getDfa(dfas: List[DFA]) -> DFA:
     start_state = State(0, {}, StateTypes.START)
     states = [start_state]
     cnt = 1
