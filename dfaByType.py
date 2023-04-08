@@ -3,15 +3,34 @@ from dfa import State, StateType, DFA
 from enum import Enum, auto
 
 class CharType(Enum):
-    digits = "0123456789"
+    # digits = "0123456789"
+    # alphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    # whitespaces = "\t\f\v\r\n"
+    # symbols = "=*;:,[](){}+-</"
+    # all = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
     alphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    whitespaces = "\t\f\v\r\n"
+    digits = "0123456789"
     symbols = "=*;:,[](){}+-</"
+    whitespaces = "\n\r\t\v\f "
+    all = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
 def transition_function(type : str):
     transitions = []
     if type == "COMMENT":
         state0 = {'/' : 1}
         state1 = {'*' : 2}
+        # for ch in CharType.alphabets.value + CharType.digits.value + CharType.symbols.value + CharType.whitespaces.value:
+        #     if ch not in '*':
+        #         state1[ch] = 5
+        #
+        # state2 = {'*': 3}
+        # for ch in CharType.all.value:
+        #     if ch not in '*':
+        #         state2[ch] = 2
+        #
+        # state3 = {'/': 4, '*': 3}
+        # for ch in CharType.all.value:
+        #     if ch not in '*/':
+        #         state3[ch] = 2
         state2 = {'*' : 3}
         state3 = {'/': 4, '*': 3}
         for character in CharType.whitespaces.value + CharType.symbols.value + CharType.alphabets.value + CharType.digits.value:
@@ -39,12 +58,23 @@ def transition_function(type : str):
                 state1[character] = 1
             if character in CharType.whitespaces.value + CharType.symbols.value:
                 state1[character] = 2
+
         # for character in CharType.alphabets.value:
         #     state0[character] = 1
         # for character in CharType.digits.value + CharType.alphabets.value:
         #     state1[character] = 1
         # for character in CharType.whitespaces.value + CharType.symbols.value:
         #     state1[character] = 2
+
+        # state0 = {}
+        # for ch in CharType.alphabets.value:
+        #     state0[ch] = 1
+        #
+        # state1 = {}
+        # for ch in CharType.digits.value + CharType.alphabets.value:
+        #     state1[ch] = 1
+        # for ch in CharType.whitespaces.value + CharType.symbols.value:
+        #     state1[ch] = 2
 
         transitions.append(state0)
         transitions.append(state1)
@@ -147,8 +177,8 @@ symbolDfa = DFA(states)
 transitions = transition_function("WHITESPACE")
 state0 = State(0, transitions[0], StateTypes.START, DfaPartTypes.whitespace)
 state1 = State(1, transitions[1], StateTypes.ACCEPT, DfaPartTypes.whitespace)
-states.append(state0)
-states.append(state1)
-# states = [state0, state1]
+# states.append(state0)
+# states.append(state1)
+states = [state0, state1]
 whitespaceDfa = DFA(states)
 
