@@ -4,9 +4,9 @@
 
 
 from scanner import Scanner
-from dfa import getDfa
+from dfa import DFA,get_dfa
 if __name__ == "__main__":
-    dfa = getDfa()
+    dfa = get_dfa()
     scanner = Scanner(dfa, f"input.txt")
     ignore = ['WHITESPACE', 'COMMENT']
     tokens = ""
