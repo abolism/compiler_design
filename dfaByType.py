@@ -1,4 +1,4 @@
-from ENUMS import StateTypes, TokenTypes
+from dfa import StateType, TokenType
 from dfa import State, DFA
 from enum import Enum, auto
 from dfa import getDfa
