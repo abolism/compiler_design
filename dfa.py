@@ -465,6 +465,24 @@ class State:
             return True
         return False
 
+""" now we want to implement class State like below:
+1. Creates a State class that has the following attributes:
+    a. id - the state number
+    b. transitions - a dictionary that maps a character to a state
+    c. state_type - an enum that indicates the type of state
+    d. part_type - an enum that indicates the type of token that the state can accept
+    e. error - an enum that indicates the type of error that the state can accept
+2. The class has the following methods:
+    a. __init__ - the constructor
+    b. __str__ - a string representation of the state
+    c. get_token - a function that returns the token type, the token, and the extra character
+    d. is_accept - a function that checks if the state is an accept state """
+
+
+
+
+
+
 
 class DFA:
     def __init__(self, states: List[State], should_update: bool = True):

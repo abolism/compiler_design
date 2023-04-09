@@ -1,25 +1,18 @@
-"Abolfazl Eshagh 99101105"
+"""
+Abolfazl Eshagh 99101105
+Zahra Alipour
+"""
+
+
 from dfa import getDfa
-
-"Zahra Alipour"
-
-
-from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa
-
-# from dfa import DFA, merge_dfas
-# from DFAs.COMMENT_DFA import comment_dfa
-# from DFAs.ID_KEYWORD_DFA import idKeyword_dfa
-# from DFAs.NUM_DFA import num_dfa
-# from DFAs.SYMBOL_DFA import symbol_dfa
-# from DFAs.WHITESPACE_DFA import whitespace_dfa
-
-
+from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, merged_dfa
 from scanner import Scanner
-# from dfa import DFA,get_dfa
+
 if __name__ == "__main__":
     # dfa = get_dfa()
     # dfa = merge_dfas([comment_dfa, idKeyword_dfa, num_dfa, symbol_dfa, whitespace_dfa])
-    dfa = getDfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
+    # dfa = getDfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
+    dfa = merged_dfa
     scanner = Scanner(dfa, f"input.txt")
     ignore = ['WHITESPACE', 'COMMENT']
     tokens = ""
