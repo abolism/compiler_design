@@ -1,45 +1,43 @@
-from ENUMS import StateTypes, TokenTypes
-from dfa import State, DFA
-from enum import Enum, auto
-from dfa import getDfa
+from dfa import State, DFA, StateTypes, TokenTypes, getDfa, CharacterType, ErrorType
+# from enum import Enum, auto
 
 # types of tokens in C_Minus according to doc
-class TokenType(Enum):
-    NUM = 1
-    ID_KEYWORD = 2
-    WHITESPACE = 3
-    SYMBOL = 4
-    COMMENT = 5
+# class TokenType(Enum):
+#     NUM = 1
+#     ID_KEYWORD = 2
+#     WHITESPACE = 3
+#     SYMBOL = 4
+#     COMMENT = 5
 
 
 # types of valid characters according to doc
-class CharacterType(Enum):
-    ALPHABETS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    DIGITS = "0123456789"
-    SYMBOLS = "=*;:,[](){}+-</"
-    WHITESPACE = "\n\r\t\v\f "
-    ALL = ALPHABETS + DIGITS + SYMBOLS + WHITESPACE
-    # ALL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
-
-
-# types of errors to be handled according to doc
-class ErrorType(Enum):
-    SIMPLE = 1
-    INVALID_INPUT = 'Invalid input'
-    UNCLOSED_COMMENT = 'Unclosed comment'
-    UNMATCHED_COMMENT = 'Unmatched comment'
-    INVALID_NUMBER = 'Invalid number'
+# class CharacterType(Enum):
+#     ALPHABETS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#     DIGITS = "0123456789"
+#     SYMBOLS = "=*;:,[](){}+-</"
+#     WHITESPACE = "\n\r\t\v\f "
+#     ALL = ALPHABETS + DIGITS + SYMBOLS + WHITESPACE
+#     # ALL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
+#
+#
+# # types of errors to be handled according to doc
+# class ErrorType(Enum):
+#     SIMPLE = 1
+#     INVALID_INPUT = 'Invalid input'
+#     UNCLOSED_COMMENT = 'Unclosed comment'
+#     UNMATCHED_COMMENT = 'Unmatched comment'
+#     INVALID_NUMBER = 'Invalid number'
 
 
 # types of states in DFA
-class State_Type(Enum):
-    SIMPLE = 1
-    START = 2
-    ACCEPT = 3
-    ACCEPT_WITH_RETURN = 4
-    ACCEPT_ID_KEYWORD = 5
-    ERROR = 6
-    ERROR_WITH_RETURN = 7
+# class State_Type(Enum):
+#     SIMPLE = 1
+#     START = 2
+#     ACCEPT = 3
+#     ACCEPT_WITH_RETURN = 4
+#     ACCEPT_ID_KEYWORD = 5
+#     ERROR = 6
+#     ERROR_WITH_RETURN = 7
 
 # returns transitions for a given token type
 def transition_function(token_type: str):
