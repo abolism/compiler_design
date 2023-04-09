@@ -58,6 +58,7 @@ class Scanner:
     def get_next_token(self) -> Tuple[str, str]:
         if self.index >= len(self.buffer):
             raise Exception("no more input")
+        # current_state = self.dfa.get_start_node()
         current_state = self.dfa.start_state
         # print(current_state)
         word = ""
@@ -79,7 +80,7 @@ class Scanner:
             else:
                 hold = self.dfa.ignore
             current_state = hold
-            # print(f'[{word}] -> {current_state}')
+            print(f'[{word}] -> {current_state}')
 
         type, token, deleted_character, error_message = current_state.move_pointer(word)
         if type == "ID" and not token in self.symbol_table:

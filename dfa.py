@@ -95,29 +95,51 @@ class State:
                     return "ERROR", lexeme, '', ErrorType.UNCLOSED_COMMENT.value
 
 class DFA:
-    def __init__(self, states: List[State], update: bool = True):
+    # def __init__(self, states: List[State], update: bool = True):
+    #     self.states = states
+    #     # set start state in DFA
+    #     for state in states:
+    #         if state.state_type == StateType.START:
+    #             self.start_state = state
+    #     if update:
+    #         '''usage removed'''
+    #         # for state in self.states:
+    #         #     for char in state.transitions.keys():
+    #         #         next_state_id = state.transitions[char]
+    #         #         # next_state = [s for s in self.states if s.id == next_state_id][0]
+    #         #         # state.transitions[char] = next_state
+    #         #         state.transitions[char] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
+    #     else:
+    #         self.ignore = State(-1, {}, StateType.ERROR, None, ErrorType.INVALID_INPUT.value)
+    #
+    # def update_transitions(self):
+    #     for state in self.states:
+    #         for alph in state.transitions.keys():
+    #             next_state_id = state.transitions[alph]
+    #             state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
+    def __init__(self, states: List[State], should_update: bool = True):
         self.states = states
-        # set start state in DFA
         for state in states:
             if state.state_type == StateType.START:
                 self.start_state = state
-        if update:
-            '''usage removed'''
-            for state in self.states:
-                for char in state.transitions.keys():
-                    next_state_id = state.transitions[char]
-                    next_state = [s for s in self.states if s.id == next_state_id][0]
-                    state.transitions[char] = next_state
+        if should_update:
+            self.update_transactions()
         else:
-            self.ignore = State(-1, {}, StateType.ERROR, None, ErrorType.INVALID_INPUT.value)
+            self.trash = State(-1, {}, StateType.ERROR, None, ErrorType.INVALID_INPUT.value)
+
+    def update_transactions(self):
+        for state in self.states:
+            for alph in state.transitions.keys():
+                next_state_id = state.transitions[alph]
+                state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
 
     '''usage removed'''
-    # def get_next(self, state: State, alphabet: str):
-    #     if alphabet in state.transitions.keys():
-    #         return state.transitions[alphabet]
-    #     if state.part_type == TokenType.COMMENT:
-    #         return state.transitions['a']
-    #     return self.ignore
+    def get_next(self, state: State, alphabet: str):
+        if alphabet in state.transitions.keys():
+            return state.transitions[alphabet]
+        if state.part_type == TokenType.COMMENT:
+            return state.transitions['a']
+        return self.ignore
 
     '''usage removed'''
     # def get_start_node(self):
@@ -126,20 +148,20 @@ class DFA:
 
 def get_dfa(type_specific_DFAs: List[DFA]):
     start_state = State(0, {}, StateType.START)
-    dfa_states = [start_state]
-    counter = 0
+    states = [start_state]
+    counter = 1
     for dfa in type_specific_DFAs:
         for dfa_state in dfa.states:
-            dfa_state.id += counter + 1
+            dfa_state.id += counter
             if dfa_state.state_type == StateType.START:
                 dfa_state.state_type = StateType.SIMPLE
                 for key, value in dfa_state.transitions.items():
                     if key in start_state.transitions.keys():
                         raise NotImplementedError
                     start_state.transitions[key] = value
+        states = states + dfa.states
         counter += len(dfa.states)
-        dfa_states = dfa_states + dfa.states
-    return DFA(dfa_states, False)
+    return DFA(states, False)
 
 
 """ now we want to implement class State like below:
