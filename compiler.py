@@ -4,7 +4,7 @@ Zahra Alipour
 """
 
 
-from dfa import getDfa
+from dfa import get_dfa
 from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, merged_dfa
 from scanner import Scanner
 

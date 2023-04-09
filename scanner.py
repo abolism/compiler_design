@@ -1,4 +1,5 @@
 from typing import Tuple
+from dfa import StateType, TokenType
 
 class Scanner:
     def __init__(self, dfa, input_file):
@@ -57,20 +58,30 @@ class Scanner:
     def get_next_token(self) -> Tuple[str, str]:
         if self.index >= len(self.buffer):
             raise Exception("no more input")
-        current_state = self.dfa.get_start_node()
+        current_state = self.dfa.start_state
         # print(current_state)
         word = ""
         before_line = self.line
-        while not current_state.is_accept() and self.index < len(self.buffer):
+        not_accepted_states = [StateType.SIMPLE, StateType.START]
+        while current_state not in not_accepted_states and self.index < len(self.buffer):
+        # while not current_state.is_accept() and self.index < len(self.buffer):
             alphabet = self.buffer[self.index]
             if alphabet == '\n':
                 self.line += 1
             self.index += 1
             word = word + alphabet
-            current_state = self.dfa.get_next(current_state, alphabet)
+            # current_state = self.dfa.get_next(current_state, alphabet)
+            hold = None
+            if alphabet in current_state.transitions.keys():
+                hold = current_state.transitions[alphabet]
+            if current_state.part_type == TokenType.COMMENT:
+                hold = current_state.transitions['a']
+            else:
+                hold = self.dfa.ignore
+            current_state = hold
             # print(f'[{word}] -> {current_state}')
 
-        type, token, deleted_character, error_message = current_state.get_token(word)
+        type, token, deleted_character, error_message = current_state.move_pointer(word)
         if type == "ID" and not token in self.symbol_table:
             self.symbol_table.append(token)
         if deleted_character:
