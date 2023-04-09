@@ -1,11 +1,5 @@
 from enum import Enum, auto
 from typing import List, Dict, Tuple
-
-# keywords as given by the doc
-KEYWORDS = ["if", "else", "void", "int", "repeat", "break", "until", "return"]
-
-
-# types of states in DFA
 class StateType(Enum):
     SIMPLE = 1
     START = 2
@@ -15,8 +9,6 @@ class StateType(Enum):
     ERROR = 6
     ERROR_WITH_RETURN = 7
 
-
-# types of tokens in C_Minus according to doc
 class TokenType(Enum):
     NUM = 1
     ID_KEYWORD = 2
@@ -24,6 +16,7 @@ class TokenType(Enum):
     SYMBOL = 4
     COMMENT = 5
 
+KEYWORDS = ["if", "else", "void", "int", "repeat", "break", "until", "return"]
 
 # types of valid characters according to doc
 class CharacterType(Enum):
@@ -32,6 +25,7 @@ class CharacterType(Enum):
     SYMBOLS = "=*;:,[](){}+-</"
     WHITESPACE = "\n\r\t\v\f "
     ALL = ALPHABETS + DIGITS + SYMBOLS + WHITESPACE
+    # ALL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
 
 
 # types of errors to be handled according to doc
@@ -43,80 +37,85 @@ class ErrorType(Enum):
     INVALID_NUMBER = 'Invalid number'
 
 
+# types of states in DFA
+
+
+# class StateType:
+#     def __init__(self, state_type: StateTypes, part_type=None, error_message_type=None):
+#         self.type = state_type
+#         if error_message_type:
+#             self.error_message = error_message_type.value()
+#         self.part_type = part_type
+
+
 class State:
-    def __init__(self, id: int, transitions: Dict[str, int], state_type: StateType, part_type: TokenType = None,
-                 error_message: ErrorType = None):
+    def __init__(self, id: int, transitions: Dict[str, int], type: StateType, part: TokenType = None,
+                 error: ErrorType = None):
         self.id = id
         self.transitions = transitions
-        self.state_type = state_type
-        self.part_type = part_type
-        self.error_message = error_message
+        self.state_type = type
+        self.part_type = part
+        self.error = error
 
     def __str__(self):
         return f'{self.id} - {self.state_type} - {self.part_type}'
 
-    # gets lexeme returns (type, lexeme, character to be returned(if there is any), error message(if needed))
-    def move_pointer(self, lexeme: str):
-        accepting_states = [StateType.ACCEPT, StateType.ACCEPT_WITH_RETURN, StateType.SIMPLE]
-        error_states = [StateType.ERROR, StateType.ERROR_WITH_RETURN]
-        char_to_return = ""
-        # first we check if an error has occured:
-        if self.state_type in error_states:
-            if self.state_type == StateType.ERROR_WITH_RETURN:
-                char_to_return = lexeme[-1]
-                # remove the additional character from the lexeme
-                lexeme = lexeme.rstrip(char_to_return)
-            return "ERROR", lexeme, char_to_return, self.error_message
-
-        elif self.state_type in accepting_states:
+    def get_token(self, word: str) -> Tuple[str, str, str, str]:
+        if self.state_type == StateType.ACCEPT or self.state_type == StateType.ACCEPT_WITH_RETURN or self.state_type == StateType.SIMPLE:
+            extra_char = ''
             if self.state_type == StateType.ACCEPT_WITH_RETURN:
-                char_to_return = lexeme[-1]
-                lexeme = lexeme.rstrip(char_to_return)
-            if self.part_type == TokenType.ID_KEYWORD:
-                if lexeme not in KEYWORDS:
-                    return "ID", lexeme, char_to_return, None
+                extra_char = word[-1]
+                word = word[:-1]
+            if self.part_type == TokenType.NUM:
+                return "NUM", word, extra_char, None
+            elif self.part_type == TokenType.ID_KEYWORD:
+                if word in KEYWORDS:
+                    return "KEYWORD", word, extra_char, None
                 else:
-                    return "KEYWORD", lexeme, char_to_return, None
-            elif self.part_type == TokenType.NUM:
-                return "NUM", lexeme, char_to_return, None
-
-            elif self.part_type == TokenType.SYMBOL:
-                return "SYMBOL", lexeme, char_to_return, None
-
+                    return "ID", word, extra_char, None
             elif self.part_type == TokenType.WHITESPACE:
-                return "WHITESPACE", lexeme, char_to_return, None
-
+                return "WHITESPACE", word, extra_char, None
+            elif self.part_type == TokenType.SYMBOL:
+                return "SYMBOL", word, extra_char, None
             else:
                 if self.state_type != StateType.SIMPLE:
-                    return "COMMENT", lexeme, char_to_return, None
+                    return "COMMENT", word, extra_char, None
                 else:
-                    if len(lexeme) > 7:
-                        lexeme = lexeme[:7] + '...'
-                    return "ERROR", lexeme, '', ErrorType.UNCLOSED_COMMENT.value
+                    if len(word) > 7:
+                        word = word[0:7] + '...'
+                    return "ERROR", word, '', ErrorType.UNCLOSED_COMMENT.value
+        elif self.state_type == StateType.ERROR or self.state_type == StateType.ERROR_WITH_RETURN:
+            extra_char = ''
+            if self.state_type == StateType.ERROR_WITH_RETURN:
+                extra_char = word[-1]
+                word = word[:-1]
+            return "ERROR", word, extra_char, self.error
+
+    def is_accept(self) -> bool:
+        if self.state_type != StateType.SIMPLE and self.state_type != StateType.START:
+            return True
+        return False
+
+""" now we want to implement class State like below:
+1. Creates a State class that has the following attributes:
+    a. id - the state number
+    b. transitions - a dictionary that maps a character to a state
+    c. state_type - an enum that indicates the type of state
+    d. part_type - an enum that indicates the type of token that the state can accept
+    e. error - an enum that indicates the type of error that the state can accept
+2. The class has the following methods:
+    a. __init__ - the constructor
+    b. __str__ - a string representation of the state
+    c. get_token - a function that returns the token type, the token, and the extra character
+    d. is_accept - a function that checks if the state is an accept state """
+
+
+
+
+
+
 
 class DFA:
-    # def __init__(self, states: List[State], update: bool = True):
-    #     self.states = states
-    #     # set start state in DFA
-    #     for state in states:
-    #         if state.state_type == StateType.START:
-    #             self.start_state = state
-    #     if update:
-    #         '''usage removed'''
-    #         # for state in self.states:
-    #         #     for char in state.transitions.keys():
-    #         #         next_state_id = state.transitions[char]
-    #         #         # next_state = [s for s in self.states if s.id == next_state_id][0]
-    #         #         # state.transitions[char] = next_state
-    #         #         state.transitions[char] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
-    #     else:
-    #         self.ignore = State(-1, {}, StateType.ERROR, None, ErrorType.INVALID_INPUT.value)
-    #
-    # def update_transitions(self):
-    #     for state in self.states:
-    #         for alph in state.transitions.keys():
-    #             next_state_id = state.transitions[alph]
-    #             state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
     def __init__(self, states: List[State], should_update: bool = True):
         self.states = states
         for state in states:
@@ -133,46 +132,30 @@ class DFA:
                 next_state_id = state.transitions[alph]
                 state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
 
-    '''usage removed'''
-    def get_next(self, state: State, alphabet: str):
+    def get_next(self, state: State, alphabet: str) -> State:
         if alphabet in state.transitions.keys():
             return state.transitions[alphabet]
         if state.part_type == TokenType.COMMENT:
             return state.transitions['a']
-        return self.ignore
+        return self.trash
 
-    '''usage removed'''
-    # def get_start_node(self):
-    #     return self.start_state
+    def get_start_node(self) -> State:
+        return self.start_state
 
 
-def get_dfa(type_specific_DFAs: List[DFA]):
+def get_dfa(dfas: List[DFA]) -> DFA:
     start_state = State(0, {}, StateType.START)
     states = [start_state]
-    counter = 1
-    for dfa in type_specific_DFAs:
-        for dfa_state in dfa.states:
-            dfa_state.id += counter
-            if dfa_state.state_type == StateType.START:
-                dfa_state.state_type = StateType.SIMPLE
-                for key, value in dfa_state.transitions.items():
+    cnt = 1
+    for dfa in dfas:
+        for state in dfa.states:
+            state.id += cnt
+            if state.state_type == StateType.START:
+                state.state_type = StateType.SIMPLE
+                for key, value in state.transitions.items():
                     if key in start_state.transitions.keys():
                         raise NotImplementedError
                     start_state.transitions[key] = value
         states = states + dfa.states
-        counter += len(dfa.states)
+        cnt += len(dfa.states)
     return DFA(states, False)
-
-
-""" now we want to implement class State like below:
-1. Creates a State class that has the following attributes:
-    a. id - the state number
-    b. transitions - a dictionary that maps a character to a state
-    c. state_type - an enum that indicates the type of state
-    d. part_type - an enum that indicates the type of token that the state can accept
-    e. error - an enum that indicates the type of error that the state can accept
-2. The class has the following methods:
-    a. __init__ - the constructor
-    b. __str__ - a string representation of the state
-    c. get_token - a function that returns the token type, the token, and the extra character
-    d. is_accept - a function that checks if the state is an accept state """
