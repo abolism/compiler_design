@@ -1,45 +1,43 @@
-from ENUMS import StateTypes, TokenTypes
-from dfa import State, DFA
-from enum import Enum, auto
-from dfa import getDfa
+from dfa import State, DFA, StateType, TokenType, get_dfa, CharacterType, ErrorType
+# from enum import Enum, auto
 
 # types of tokens in C_Minus according to doc
-class TokenType(Enum):
-    NUM = 1
-    ID_KEYWORD = 2
-    WHITESPACE = 3
-    SYMBOL = 4
-    COMMENT = 5
+# class TokenType(Enum):
+#     NUM = 1
+#     ID_KEYWORD = 2
+#     WHITESPACE = 3
+#     SYMBOL = 4
+#     COMMENT = 5
 
 
 # types of valid characters according to doc
-class CharacterType(Enum):
-    ALPHABETS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    DIGITS = "0123456789"
-    SYMBOLS = "=*;:,[](){}+-</"
-    WHITESPACE = "\n\r\t\v\f "
-    ALL = ALPHABETS + DIGITS + SYMBOLS + WHITESPACE
-    # ALL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
-
-
-# types of errors to be handled according to doc
-class ErrorType(Enum):
-    SIMPLE = 1
-    INVALID_INPUT = 'Invalid input'
-    UNCLOSED_COMMENT = 'Unclosed comment'
-    UNMATCHED_COMMENT = 'Unmatched comment'
-    INVALID_NUMBER = 'Invalid number'
+# class CharacterType(Enum):
+#     ALPHABETS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#     DIGITS = "0123456789"
+#     SYMBOLS = "=*;:,[](){}+-</"
+#     WHITESPACE = "\n\r\t\v\f "
+#     ALL = ALPHABETS + DIGITS + SYMBOLS + WHITESPACE
+#     # ALL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=;:,[](){}+-*</\n\r\t\v\f "
+#
+#
+# # types of errors to be handled according to doc
+# class ErrorType(Enum):
+#     SIMPLE = 1
+#     INVALID_INPUT = 'Invalid input'
+#     UNCLOSED_COMMENT = 'Unclosed comment'
+#     UNMATCHED_COMMENT = 'Unmatched comment'
+#     INVALID_NUMBER = 'Invalid number'
 
 
 # types of states in DFA
-class State_Type(Enum):
-    SIMPLE = 1
-    START = 2
-    ACCEPT = 3
-    ACCEPT_WITH_RETURN = 4
-    ACCEPT_ID_KEYWORD = 5
-    ERROR = 6
-    ERROR_WITH_RETURN = 7
+# class State_Type(Enum):
+#     SIMPLE = 1
+#     START = 2
+#     ACCEPT = 3
+#     ACCEPT_WITH_RETURN = 4
+#     ACCEPT_ID_KEYWORD = 5
+#     ERROR = 6
+#     ERROR_WITH_RETURN = 7
 
 # returns transitions for a given token type
 def transition_function(token_type: str):
@@ -175,12 +173,12 @@ transitions = transition_function("COMMENT")
 
 # states = [state0, state1, state2, state3, state4, state5]
 states = []
-states.append(State(0, transitions[0], StateTypes.START, None))
-states.append(State(1, transitions[1], StateTypes.SIMPLE, None))
-states.append(State(2, transitions[2], StateTypes.SIMPLE, TokenTypes.comment))
-states.append(State(3, transitions[3], StateTypes.SIMPLE, TokenTypes.comment))
-states.append(State(4, transitions[4], StateTypes.ACCEPT, TokenTypes.comment))
-states.append(State(5, {}, StateTypes.ERROR_WITH_EXTRA_CHAR, TokenTypes.comment, ErrorType.INVALID_INPUT.value))
+states.append(State(0, transitions[0], StateType.START, None))
+states.append(State(1, transitions[1], StateType.SIMPLE, None))
+states.append(State(2, transitions[2], StateType.SIMPLE, TokenType.COMMENT))
+states.append(State(3, transitions[3], StateType.SIMPLE, TokenType.COMMENT))
+states.append(State(4, transitions[4], StateType.ACCEPT, TokenType.COMMENT))
+states.append(State(5, {}, StateType.ERROR_WITH_RETURN, TokenType.COMMENT, ErrorType.INVALID_INPUT.value))
 commentDfa = DFA(states)
 
 # get DFA for id_keyword
@@ -190,9 +188,9 @@ transitions = transition_function("ID_KEYWORD")
 # state2 = State(2, transitions[2], StateTypes.ACCEPT_WITH_EXTRA_CHAR, TokenTypes.idKeyword)
 # states = [state0, state1, state2]
 states = []
-states.append(State(0, transitions[0], StateTypes.START, TokenTypes.idKeyword))
-states.append(State(1, transitions[1], StateTypes.SIMPLE, TokenTypes.idKeyword))
-states.append(State(2, transitions[2], StateTypes.ACCEPT_WITH_EXTRA_CHAR, TokenTypes.idKeyword))
+states.append(State(0, transitions[0], StateType.START, TokenType.ID_KEYWORD))
+states.append(State(1, transitions[1], StateType.SIMPLE, TokenType.ID_KEYWORD))
+states.append(State(2, transitions[2], StateType.ACCEPT_WITH_RETURN, TokenType.ID_KEYWORD))
 id_KeywordDfa = DFA(states)
 
 # get DFA for num
@@ -203,26 +201,26 @@ transitions = transition_function("NUM")
 # state3 = State(3, transitions[3], StateTypes.ERROR, TokenTypes.num, ErrorType.INVALID_NUMBER.value)
 # states = [state0, state1, state2, state3]
 states = []
-states.append(State(0, transitions[0], StateTypes.START, TokenTypes.num))
-states.append(State(1, transitions[1], StateTypes.SIMPLE, TokenTypes.num))
-states.append(State(2, transitions[2], StateTypes.ACCEPT_WITH_EXTRA_CHAR, TokenTypes.num))
-states.append(State(3, transitions[3], StateTypes.ERROR, TokenTypes.num, ErrorType.INVALID_NUMBER.value))
+states.append(State(0, transitions[0], StateType.START, TokenType.NUM))
+states.append(State(1, transitions[1], StateType.SIMPLE, TokenType.NUM))
+states.append(State(2, transitions[2], StateType.ACCEPT_WITH_RETURN, TokenType.NUM))
+states.append(State(3, transitions[3], StateType.ERROR, TokenType.NUM, ErrorType.INVALID_NUMBER.value))
 numDfa = DFA(states)
 
 # get DFA for symbol
 transitions = transition_function("SYMBOL")
 states = []
-states.append(State(0, transitions[0], StateTypes.START, TokenTypes.symbol))
-states.append(State(1, transitions[1], StateTypes.SIMPLE, TokenTypes.symbol))
-states.append(State(2, transitions[2], StateTypes.SIMPLE, TokenTypes.symbol))
+states.append(State(0, transitions[0], StateType.START, TokenType.SYMBOL))
+states.append(State(1, transitions[1], StateType.SIMPLE, TokenType.SYMBOL))
+states.append(State(2, transitions[2], StateType.SIMPLE, TokenType.SYMBOL))
 for i in range(12):
-    states.append(State(i + 3, transitions[i + 3], StateTypes.ACCEPT, TokenTypes.symbol))
+    states.append(State(i + 3, transitions[i + 3], StateType.ACCEPT, TokenType.SYMBOL))
 # for i in range(3, 15):
 #     states.append(State(i, transitions[i], StateTypes.ACCEPT, DfaPartTypes.symbol))
-states.append(State(15, transitions[15], StateTypes.ACCEPT, TokenTypes.symbol))
-states.append(State(16, transitions[16], StateTypes.ACCEPT_WITH_EXTRA_CHAR, TokenTypes.symbol))
-states.append(State(17, transitions[17], StateTypes.ACCEPT_WITH_EXTRA_CHAR, TokenTypes.symbol))
-states.append(State(18, transitions[18], StateTypes.ERROR, TokenTypes.symbol, ErrorType.UNMATCHED_COMMENT.value))
+states.append(State(15, transitions[15], StateType.ACCEPT, TokenType.SYMBOL))
+states.append(State(16, transitions[16], StateType.ACCEPT_WITH_RETURN, TokenType.SYMBOL))
+states.append(State(17, transitions[17], StateType.ACCEPT_WITH_RETURN, TokenType.SYMBOL))
+states.append(State(18, transitions[18], StateType.ERROR, TokenType.SYMBOL, ErrorType.UNMATCHED_COMMENT.value))
 symbolDfa = DFA(states)
 
 #get DFA for whitespace
@@ -233,8 +231,8 @@ transitions = transition_function("WHITESPACE")
 # # states.append(state1)
 # states = [state0, state1]
 states = []
-states.append(State(0, transitions[0], StateTypes.START, TokenTypes.whitespace))
-states.append(State(1, transitions[1], StateTypes.ACCEPT, TokenTypes.whitespace))
+states.append(State(0, transitions[0], StateType.START, TokenType.WHITESPACE))
+states.append(State(1, transitions[1], StateType.ACCEPT, TokenType.WHITESPACE))
 whitespaceDfa = DFA(states)
 
 # # get DFA for error
@@ -248,6 +246,4 @@ whitespaceDfa = DFA(states)
 # endDfa = DFA(states)
 
 # DFA for all types merged
-merged_dfa = getDfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
-
-
+merged_dfa = get_dfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
