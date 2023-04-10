@@ -16,21 +16,11 @@ testcase 9 : passed
 testcase 10 : passed
 '''
 
-'''
-there is a bug:
-if input is //
-output in lexical errors must be (/,invalid_input) (/,invalid_input)
-but it is (/, Invalid input) (/, Unclosed comment) 
-'''
-
 from dfa import get_dfa
 from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, DFAs_merged
 from scanner import Scanner
 
 if __name__ == "__main__":
-    # dfa = get_dfa()
-    # dfa = merge_dfas([comment_dfa, idKeyword_dfa, num_dfa, symbol_dfa, whitespace_dfa])
-    # dfa = getDfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
     dfa = DFAs_merged
     scanner = Scanner(dfa, f"input.txt")
     ignore = ['WHITESPACE', 'COMMENT']
@@ -55,13 +45,9 @@ if __name__ == "__main__":
                 if line != hold_line_for_error:
                     if hold_line_for_error != 0:
                         errors += f"\n{line}.\t({token}, {error_message}) "
-                        # hold_line_for_error = line
                     else:
                         errors += f"{line}.\t({token}, {error_message}) "
                     hold_line_for_error = line
-                    # errors += f"\n {line} {token} {message}"
-                    # hold_line = line
-                    # hold_line_for_error = line
                 else:
                     errors += f"({token}, {error_message}) "
 
@@ -69,10 +55,8 @@ if __name__ == "__main__":
                 if line != hold_line:
                     if hold_line != 0:
                         tokens += f"\n{line}.\t({token_type}, {token}) "
-                        # hold_line = line
                     else:
                         tokens += f"{line}.\t({token_type}, {token}) "
-                        # hold_line = line
                     hold_line = line
                 else:
                     tokens += f"({token_type}, {token}) "

@@ -1,9 +1,12 @@
 from enum import Enum, auto
 from typing import List, Dict, Tuple
+# from scanner import Scanner
 
+# KEYWORDS = []
+# KEYWORDS = Scanner.add_keywords(KEYWORDS)
 KEYWORDS = ["if", "else", "void", "int", "repeat", "break", "until", "return"]
 
-
+# types of states in DFA
 class StateType(Enum):
     SIMPLE = 1
     START = 2
@@ -14,6 +17,7 @@ class StateType(Enum):
     ERROR_WITH_RETURN = 7
 
 
+# types of Tokens in C-mines according to doc
 class TokenType(Enum):
     NUM = 1
     ID_KEYWORD = 2
@@ -112,20 +116,11 @@ class DFA:
             for state in self.states:
                 for char in state.transitions.keys():
                     hold_next_state_id = state.transitions[char]
-                    # state.transitions[char] = list(filter(lambda x: x.id == hold_next_state_id, self.states))[0]
                     next_state = [s for s in self.states if s.id == hold_next_state_id][0]
                     state.transitions[char] = next_state
 
-            # self.update_transactions()
         else:
             self.ignore = State(-1, {}, StateType.ERROR, None, ErrorType.INVALID_INPUT.value)
-
-    '''usage removed'''
-    # def update_transactions(self):
-    #     for state in self.states:
-    #         for alph in state.transitions.keys():
-    #             next_state_id = state.transitions[alph]
-    #             state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
 
     def get_start_state(self):
         return self.start_state

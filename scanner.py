@@ -18,7 +18,6 @@ class Scanner:
         self.file_address = input_file
         self.file = open(input_file, "r")
         # read file into a string (buffer)
-        # self.buffer = self.file.read()
         self.file_text = self.file.read()
         self.current_index = 0
         self.line = 1
@@ -79,6 +78,7 @@ class Scanner:
             return state.transitions['a']
         return dfa.ignore
 
+    # this function was modified to do the exact opposite of what it did before (what it was supposed to do)
     def is_accepted(self, state: State):
         not_accepted = [StateType.SIMPLE, StateType.START]
         if state.state_type not in not_accepted:
@@ -94,12 +94,11 @@ class Scanner:
         # print(current_state)
         lexeme = ""
         current_line = self.line
-        # not_accepted_states = [StateTypes.SIMPLE, StateTypes.START]
         not_accepted = [StateType.SIMPLE, StateType.START]
         # while self.index < len(self.buffer) and current_state in not_accepted:
         # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
         while self.current_index < len(self.file_text) and self.is_accepted(current_state):
-            # while self.index < len(self.buffer) and current_state.is_accepted():
+        # while self.index < len(self.buffer) and current_state.is_accepted():
             # char = self.file_text[self.current_index]
             char = self.get_current_char()
             if char == '\n':
