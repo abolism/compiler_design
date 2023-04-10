@@ -122,6 +122,7 @@ class Scanner:
             # print(f'[{word}] -> {current_state}')
 
         token_type, token, char_to_return, error_message = current_state.move_forward(lexeme)
+
         if char_to_return != '':
             self.current_index -= 1
             if char_to_return == '\n':
@@ -130,6 +131,8 @@ class Scanner:
             self.symbol_table.append(token)
         # we have already added the keywords to symbol table in constractor so no need to check for token_type == "KEYWORD"
 
+        # if current_line == 14:
+            # print(current_state, token_type, token, str(error_message),char_to_return)
         return current_line, token_type, token, str(error_message)
 
     def get_symbol_table(self):

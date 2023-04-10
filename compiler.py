@@ -7,9 +7,7 @@ Zahra Alipour
 testcase 1 : passed
 testcase 2 : uncertain
 testcase 3 : passed
-testcase 4 : failed {
-        lexical_error : expected "14.	(/, Invalid input) (/, Invalid input)" but got "14.	(, Invalid input) (/, Invalid input)"
-    }
+testcase 4 : passed
 
 '''
 
@@ -40,6 +38,8 @@ if __name__ == "__main__":
 
             # first we handle errors
             if token_type == 'ERROR':
+                # if error_message == "Invalid input" and line == 14:
+                #     print(line,token_type, token, error_message)
                 if line != hold_line_for_error:
                     if hold_line_for_error != 0:
                         errors += f"\n{line}.\t({token}, {error_message}) "

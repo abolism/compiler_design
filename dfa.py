@@ -60,8 +60,11 @@ class State:
         # first we check if we got an error
         if self.state_type in error_states:
             if self.state_type == StateType.ERROR_WITH_RETURN:
+                # print("lexeme befor:" , lexeme)
                 character_to_return = lexeme[-1]
-                lexeme = lexeme.rstrip(character_to_return)
+                # lexeme = lexeme.rstrip(character_to_return)
+                lexeme = lexeme[:-1]
+                # print("lexeme after:", lexeme)
             return "ERROR", lexeme, character_to_return, self.error_message
 
         elif self.state_type in accept_states:
@@ -86,7 +89,7 @@ class State:
             else:
                 if self.state_type == StateType.SIMPLE:
                     if len(lexeme) > 7:
-                        lexeme = lexeme[:7] + '...'
+                        lexeme = lexeme[:7] + "..."
                     return "ERROR", lexeme, character_to_return, ErrorType.UNCLOSED_COMMENT.value
                 else:
                     return "COMMENT", lexeme, character_to_return, None
