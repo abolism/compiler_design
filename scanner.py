@@ -1,5 +1,6 @@
 from typing import Tuple
 from dfa import StateType, TokenType
+from dfa import DFA, State
 class Scanner:
     def __init__(self, dfa, input_file):
         # self.dfa = dfa
@@ -54,22 +55,45 @@ class Scanner:
     #     else:
     #         return self.current_line, 'ERROR', token, 'Invalid token!'
 
+
+    def get_start_state(dfa : DFA):
+        return dfa.start_state
+
+    def next_char(dfa : DFA, state: State, alphabet: str):
+        if alphabet in state.transitions.keys():
+            return state.transitions[alphabet]
+        if state.part_type == TokenType.COMMENT:
+            return state.transitions['a']
+        return dfa.ignore
+
+    def is_accepted(state : State):
+        not_accepted = [StateType.SIMPLE, StateType.START]
+        if state.state_type not in not_accepted:
+            return False
+        return True
+
     def get_next_token(self) -> Tuple[str, str]:
         if self.index >= len(self.buffer):
             raise Exception("no more input")
+        # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
         current_state = self.dfa.get_start_state()
+        # current_state = self.get_start_state(self.dfa)
         # print(current_state)
         word = ""
         before_line = self.line
         # not_accepted_states = [StateTypes.SIMPLE, StateTypes.START]
         not_accepted = [StateType.SIMPLE, StateType.START]
         # while self.index < len(self.buffer) and current_state in not_accepted:
+        # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
+        # while self.index < len(self.buffer) and self.is_accepted(current_state):
         while self.index < len(self.buffer) and current_state.is_accepted():
             alphabet = self.buffer[self.index]
             if alphabet == '\n':
                 self.line += 1
             self.index += 1
             word = word + alphabet
+            # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
+            # current_state = self.next_char(self.dfa, current_state, alphabet)
             current_state = self.dfa.next_char(current_state, alphabet)
             # hold = None
             # if alphabet in current_state.transitions.keys():
@@ -104,6 +128,9 @@ class Scanner:
 
     def get_dfa(self):
         return self.dfa
+
+    def get_current_index(self):
+        return self.current_index
 
     # def change(self):
     #     print("this is the change")

@@ -91,6 +91,7 @@ class State:
                 else:
                     return "COMMENT", lexeme, character_to_return, None
 
+    # this function was modified to do the exact opposite of what it did before (what it was supposed to do)
     def is_accepted(self):
         not_accepted = [StateType.SIMPLE, StateType.START]
         if self.state_type not in not_accepted:
@@ -122,14 +123,11 @@ class DFA:
     #         for alph in state.transitions.keys():
     #             next_state_id = state.transitions[alph]
     #             state.transitions[alph] = list(filter(lambda x: x.id == next_state_id, self.states))[0]
-    '''was unable to remove usage'''
 
-    def get_start_state(self) -> State:
+    def get_start_state(self):
         return self.start_state
 
-    '''was unable to remove usage'''
-
-    def next_char(self, state: State, alphabet: str) -> State:
+    def next_char(self, state: State, alphabet: str):
         if alphabet in state.transitions.keys():
             return state.transitions[alphabet]
         if state.part_type == TokenType.COMMENT:
@@ -137,7 +135,7 @@ class DFA:
         return self.ignore
 
 
-def get_dfa(type_specific_dfas: List[DFA]) -> DFA:
+def get_dfa(type_specific_dfas: List[DFA]):
     start_state = State(0, {}, StateType.START)
     merged_states = [start_state]
     counter = 0
