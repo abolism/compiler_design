@@ -1,6 +1,9 @@
 from typing import Tuple
 from dfa import StateType, TokenType
+# this import is for the functions moved to this class from DFA and State classes to improve runtime speed:
 from dfa import DFA, State
+
+
 class Scanner:
     def __init__(self, dfa, input_file):
         # self.dfa = dfa
@@ -12,12 +15,23 @@ class Scanner:
         # self.current_line = 1
         # # self.file.close()
         self.dfa = dfa
-        file = open(input_file, "r")
-        self.buffer = file.read()
-        self.index = 0
+        self.file_address = input_file
+        self.file = open(input_file, "r")
+        # read file into a string (buffer)
+        # self.buffer = self.file.read()
+        self.file_text = self.file.read()
+        self.current_index = 0
         self.line = 1
-        self.symbol_table = ["break", "else", "if", "int", "repeat", "return", "until", "void"]
-        file.close()
+        # self.keywords = ["break", "else", "if", "int", "repeat", "return", "until", "void"]
+        # self.symbol_table = ["break", "else", "if", "int", "repeat", "return", "until", "void"]
+        self.symbol_table = []
+        self.symbol_table = self.add_keywords(self.symbol_table)
+        self.file.close()
+
+    def add_keywords(self, list):
+        keywords = ["break", "else", "if", "int", "repeat", "return", "until", "void"]
+        list = list + keywords
+        return list
 
     # def get_next_token(self):
     #     if self.current_char == '':
@@ -55,46 +69,47 @@ class Scanner:
     #     else:
     #         return self.current_line, 'ERROR', token, 'Invalid token!'
 
-
-    def get_start_state(dfa : DFA):
+    def get_start_state(self, dfa: DFA):
         return dfa.start_state
 
-    def next_char(dfa : DFA, state: State, alphabet: str):
+    def next_char(self, dfa: DFA, state: State, alphabet: str):
         if alphabet in state.transitions.keys():
             return state.transitions[alphabet]
         if state.part_type == TokenType.COMMENT:
             return state.transitions['a']
         return dfa.ignore
 
-    def is_accepted(state : State):
+    def is_accepted(self, state: State):
         not_accepted = [StateType.SIMPLE, StateType.START]
         if state.state_type not in not_accepted:
             return False
         return True
 
-    def get_next_token(self) -> Tuple[str, str]:
-        if self.index >= len(self.buffer):
-            raise Exception("no more input")
+    def get_next_token(self):
+        if self.current_index >= len(self.file_text):
+            raise Exception("There is no more input")
         # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
-        current_state = self.dfa.get_start_state()
-        # current_state = self.get_start_state(self.dfa)
+        # current_state = self.dfa.get_start_state()
+        current_state = self.get_start_state(self.dfa)
         # print(current_state)
-        word = ""
-        before_line = self.line
+        lexeme = ""
+        current_line = self.line
         # not_accepted_states = [StateTypes.SIMPLE, StateTypes.START]
         not_accepted = [StateType.SIMPLE, StateType.START]
         # while self.index < len(self.buffer) and current_state in not_accepted:
         # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
-        # while self.index < len(self.buffer) and self.is_accepted(current_state):
-        while self.index < len(self.buffer) and current_state.is_accepted():
-            alphabet = self.buffer[self.index]
-            if alphabet == '\n':
+        while self.current_index < len(self.file_text) and self.is_accepted(current_state):
+            # while self.index < len(self.buffer) and current_state.is_accepted():
+            # char = self.file_text[self.current_index]
+            char = self.get_current_char()
+            if char == '\n':
                 self.line += 1
-            self.index += 1
-            word = word + alphabet
+            self.current_index += 1
+            lexeme = lexeme + char
             # we can use the function defined in the DFA class but to improve the runtime speed we can use the function we defined in Scanner Class
-            # current_state = self.next_char(self.dfa, current_state, alphabet)
-            current_state = self.dfa.next_char(current_state, alphabet)
+            current_state = self.next_char(self.dfa, current_state, char)
+            # current_state = self.dfa.next_char(current_state, alphabet)
+
             # hold = None
             # if alphabet in current_state.transitions.keys():
             #     hold = current_state.transitions[alphabet]
@@ -103,28 +118,31 @@ class Scanner:
             # else:
             #     hold = self.trash
             # current_state = hold
+
             # print(f'[{word}] -> {current_state}')
 
-        type, token, deleted_character, error_message = current_state.move_forward(word)
-        if type == "ID" and not token in self.symbol_table:
-            self.symbol_table.append(token)
-        if deleted_character:
-            self.index -= 1
-            if deleted_character == '\n':
+        token_type, token, char_to_return, error_message = current_state.move_forward(lexeme)
+        if char_to_return != '':
+            self.current_index -= 1
+            if char_to_return == '\n':
                 self.line -= 1
-        return before_line, type, token, str(error_message)
+        if token_type == "ID" and token not in self.symbol_table:
+            self.symbol_table.append(token)
+        # we have already added the keywords to symbol table in constractor so no need to check for token_type == "KEYWORD"
+
+        return current_line, token_type, token, str(error_message)
 
     def get_symbol_table(self):
         return self.symbol_table
 
     def get_current_line(self):
-        return self.current_line
+        return self.line
 
     def get_current_char(self):
-        return self.current_char
+        return self.file_text[self.current_index]
 
-    def get_input_file(self):
-        return self.input_file
+    def get_file_address(self):
+        return self.file_address
 
     def get_dfa(self):
         return self.dfa
