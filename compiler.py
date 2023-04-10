@@ -16,6 +16,13 @@ testcase 9 : passed
 testcase 10 : passed
 '''
 
+'''
+there is a bug:
+if input is //
+output in lexical errors must be (/,invalid_input) (/,invalid_input)
+but it is (/, Invalid input) (/, Unclosed comment) 
+'''
+
 from dfa import get_dfa
 from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, DFAs_merged
 from scanner import Scanner
