@@ -8,6 +8,10 @@ testcase 1 : passed
 testcase 2 : uncertain
 testcase 3 : passed
 testcase 4 : passed
+testcase 5 : uncertain (tokens.txt expected to have 51 lines(on empty line is added in the end) but has 50 lines(that empty line is not there!))
+testcase 6 : uncertain (the same reason as testcase 5 both in lexical_error.txt and tokens.txt)
+testcase 7 : uncertain (same reason (will be referred to by *)
+testcase 8 : uncertain (*)
 
 '''
 
