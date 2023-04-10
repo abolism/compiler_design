@@ -246,4 +246,4 @@ whitespaceDfa = DFA(states)
 # endDfa = DFA(states)
 
 # DFA for all types merged
-merged_dfa = get_dfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
+DFAs_merged = get_dfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
