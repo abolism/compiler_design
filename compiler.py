@@ -3,6 +3,16 @@ Abolfazl Eshagh 99101105
 Zahra Alipour
 """
 
+'''
+testcase 1 : passed
+testcase 2 : uncertain
+testcase 3 : passed
+testcase 4 : failed {
+        lexical_error : expected "14.	(/, Invalid input) (/, Invalid input)" but got "14.	(, Invalid input) (/, Invalid input)"
+    }
+
+'''
+
 from dfa import get_dfa
 from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, DFAs_merged
 from scanner import Scanner
