@@ -5,66 +5,70 @@ from dfa import State, DFA, StateType, TokenType, get_dfa, CharacterType, ErrorT
 def transition_function(token_type: str):
     transitions = []
     if token_type == "COMMENT":
-        toState0 = {'/': 1}
-        toState1 = {'*': 2}
-        toState2 = {'*': 3}
-        toState3 = {'*': 3, '/': 4}
+        toState = []
+        toState.append({'/': 1})
+        toState.append({'*': 2})
+        toState.append({'*': 3})
+        toState.append({'*': 3, '/': 4})
         for character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value + CharacterType.ALPHABETS.value + CharacterType.DIGITS.value:
             # if character not in "/*":
             if character != '*':
-                toState1[character] = 5
-                toState2[character] = 2
+                toState[1][character] = 5
+                toState[2][character] = 2
             if character not in "/*":
-                toState3[character] = 2
+                toState[3][character] = 2
 
 
-        transitions.append(toState0)
-        transitions.append(toState1)
-        transitions.append(toState2)
-        transitions.append(toState3)
+        transitions.append(toState[0])
+        transitions.append(toState[1])
+        transitions.append(toState[2])
+        transitions.append(toState[3])
         transitions.append({})
 
     elif token_type == "ID_KEYWORD":
-        toState0 = {}
-        toState1 = {}
+        toState = []
+        toState.append({})
+        toState.append({})
 
         for character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value + CharacterType.ALPHABETS.value + CharacterType.DIGITS.value:
             if character in CharacterType.ALPHABETS.value:
-                toState0[character] = 1
+                toState[0][character] = 1
             if character in CharacterType.DIGITS.value + CharacterType.ALPHABETS.value:
-                toState1[character] = 1
+                toState[1][character] = 1
             if character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value:
-                toState1[character] = 2
+                toState[1][character] = 2
 
 
-        transitions.append(toState0)
-        transitions.append(toState1)
+        transitions.append(toState[0])
+        transitions.append(toState[1])
         transitions.append({})
 
 
     elif token_type == "NUM":
-        toState0 = {}
-        toState1 = {}
+        toState = []
+        toState.append({})
+        toState.append({})
 
         for character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value + CharacterType.ALPHABETS.value + CharacterType.DIGITS.value:
             if character in CharacterType.DIGITS.value:
-                toState0[character] = 1
-                toState1[character] = 1
+                toState[0][character] = 1
+                toState[1][character] = 1
             if character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value:
-                toState1[character] = 2
+                toState[1][character] = 2
             if character in CharacterType.ALPHABETS.value:
-                toState1[character] = 3
+                toState[1][character] = 3
 
-        transitions.append(toState0)
-        transitions.append(toState1)
+        transitions.append(toState[0])
+        transitions.append(toState[1])
         transitions.append({})
         transitions.append({})
 
     elif token_type == "WHITESPACE":
-        toState0 = {}
+        toState = []
+        toState.append({})
         for character in CharacterType.WHITESPACE.value:
-            toState0[character] = 1
-        transitions.append(toState0)
+            toState[0][character] = 1
+        transitions.append(toState[0])
         transitions.append({})
 
     elif token_type == "SYMBOL":
