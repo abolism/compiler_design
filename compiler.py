@@ -1,11 +1,11 @@
 """
 Abolfazl Eshagh 99101105
-Zahra Alipour
 """
 
 '''
+phase 1, Scanner
 testcase 1 : passed
-testcase 2 : uncertain
+testcase 2 : passed
 testcase 3 : passed
 testcase 4 : passed
 testcase 5 : passed
@@ -26,22 +26,14 @@ if __name__ == "__main__":
     ignore = ['WHITESPACE', 'COMMENT']
     tokens = ""
     errors = ""
-    # symbol_table = ""
     hold_line = 0
     hold_line_for_error = 0
     while True:
-        # print("inside while")
         try:
-            # print("inside try")
             line, token_type, token, error_message = scanner.get_next_token()
-            # print(token,type)
-            # print("after get_next_token")
-            # print(line, type, token, message,"this is testing")
 
             # first we handle errors
             if token_type == 'ERROR':
-                # if error_message == "Invalid input" and line == 14:
-                #     print(line,token_type, token, error_message)
                 if line != hold_line_for_error:
                     if hold_line_for_error != 0:
                         errors += f"\n{line}.\t({token}, {error_message}) "
@@ -64,7 +56,6 @@ if __name__ == "__main__":
 
 
         except Exception as exp:
-            # print("inside except in compiler.py/main")
             break
 
     if errors == "":
@@ -74,11 +65,6 @@ if __name__ == "__main__":
     with open("lexical_errors.txt", "w") as f:
         f.write(errors)
 
-    # print(tokens)
-    # print(errors)
-
     with open("symbol_table.txt", "w") as f:
         for i, token in enumerate(scanner.symbol_table):
-            # f.write(f"\n{i+1}.\t{token}")
             f.write(f"{i + 1}.\t{token}\n")
-    # print(scanner.symbol_table)

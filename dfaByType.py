@@ -18,7 +18,6 @@ def transition_function(token_type: str):
             if character not in "/*":
                 toState[3][character] = 2
 
-
         transitions.append(toState[0])
         transitions.append(toState[1])
         transitions.append(toState[2])
@@ -37,7 +36,6 @@ def transition_function(token_type: str):
                 toState[1][character] = 1
             if character in CharacterType.WHITESPACE.value + CharacterType.SYMBOLS.value:
                 toState[1][character] = 2
-
 
         transitions.append(toState[0])
         transitions.append(toState[1])
@@ -89,6 +87,7 @@ def transition_function(token_type: str):
 
     return transitions
 
+
 # get DFA for comment
 transitions = transition_function("COMMENT")
 states = []
@@ -131,7 +130,7 @@ states.append(State(17, transitions[17], StateType.ACCEPT_WITH_RETURN, TokenType
 states.append(State(18, transitions[18], StateType.ERROR, TokenType.SYMBOL, ErrorType.UNMATCHED_COMMENT.value))
 symbolDfa = DFA(states)
 
-#get DFA for whitespace
+# get DFA for whitespace
 transitions = transition_function("WHITESPACE")
 states = []
 states.append(State(0, transitions[0], StateType.START, TokenType.WHITESPACE))
@@ -139,14 +138,6 @@ states.append(State(1, transitions[1], StateType.ACCEPT, TokenType.WHITESPACE))
 whitespaceDfa = DFA(states)
 
 # # get DFA for error
-# state0 = State(0, {}, StateTypes.ERROR, None, ErrorType.INVALID_INPUT.value)
-# states = [state0]
-# errorDfa = DFA(states)
-
-# # get DFA for end
-# state0 = State(0, {}, StateTypes.END, None)
-# states = [state0]
-# endDfa = DFA(states)
 
 # DFA for all types merged
 DFAs_merged = get_dfa([commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa])
