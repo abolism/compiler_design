@@ -920,12 +920,128 @@ grammar = {
             "->",
             "-"
         ],
-
-
-
-
-
-
+        "56": [
+            "term",
+            "->",
+            "factor",
+            "g"
+        ],
+        "57": [
+            "term_prime",
+            "->",
+            "factor_prime",
+            "g"
+        ],
+        "58": [
+            "term_zegond",
+            "->",
+            "factor_zegond",
+            "g"
+        ],
+        "59": [
+            "g",
+            "->",
+            "*",
+            "factor",
+            "g"
+        ],
+        "60": [
+            "g",
+            "->",
+            "epsilon"
+        ],
+        "61": [
+            "factor",
+            "->",
+            "(",
+            "expression",
+            ")"
+        ],
+        "62": [
+            "factor",
+            "->",
+            "id",
+            "var_call_prime"
+        ],
+        "63": [
+            "factor",
+            "->",
+            "num"
+        ],
+        "64": [
+            "var_call_prime",
+            "->",
+            "args"
+        ],
+        "65": [
+            "var_call_prime",
+            "->",
+            "var_prime"
+        ],
+        "66": [
+            "var_prime",
+            "->",
+            "[",
+            "expression",
+            "]"
+        ],
+        "67": [
+            "var_prime",
+            "->",
+            "epsilon"
+        ],
+        "68": [
+            "factor_prime",
+            "->",
+            "(",
+            "args",
+            ")"
+        ],
+        "69": [
+            "factor_prime",
+            "->",
+            "epsilon"
+        ],
+        "70": [
+            "factor_zegond",
+            "->",
+            "(",
+            "expression",
+            ")"
+        ],
+        "71": [
+            "factor_zegond",
+            "->",
+            "num"
+        ],
+        "72": [
+            "args",
+            "->",
+            "arg_list"
+        ],
+        "73": [
+            "args",
+            "->",
+            "epsilon"
+        ],
+        "74": [
+            "arg_list",
+            "->",
+            "expression",
+            "arg_list_prime"
+        ],
+        "75": [
+            "arg_list_prime",
+            "->",
+            ",",
+            "expression",
+            "arg_list_prime"
+        ],
+        "76": [
+            "arg_list_prime",
+            "->",
+            "epsilon"
+        ]
 
     },
     "parse_table": {
