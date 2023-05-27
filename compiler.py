@@ -20,6 +20,7 @@ from dfa import get_dfa
 from dfaByType import commentDfa, id_KeywordDfa, numDfa, symbolDfa, whitespaceDfa, DFAs_merged
 from scanner import Scanner
 from parser1 import Parser
+from grammar import parse, transition_diagram, print_parse_tree,grammar
 '''
 but by running the line above we get an error saying : ImportError: cannot import name 'Parser' from 'parser' (unknown location)
 so I changed the name of parser1.py to parser1.py and then I could import it
@@ -75,14 +76,20 @@ if __name__ == "__main__":
             f.write(f"{i + 1}.\t{token}\n")
 
     parser = Parser("tokens.txt")
-    parser.parse()
-    parser.print_parse_tree()
-    parse_tree = parser.get_parse_tree()
+    # we want to read tokens.txt file as input string
+    input_string = ""
+    with open("tokens.txt", "r") as f:
+        for line in f:
+            input_string += line
+
+    result = parse(input_string,grammar, transition_diagram)
+    print(result)
+    print_parse_tree(result)
 
     '''
     now we want to print the parse tree in a file
     '''
-    with open("parse_tree.txt", "w") as f:
-        f.write(str(parse_tree))
+    # with open("parse_tree.txt", "w") as f:
+    #     f.write(str(parse_tree))
 
 
