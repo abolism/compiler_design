@@ -2665,27 +2665,27 @@ grammar['follow_sets'] = {non_terminal.replace("-", "_"): [follow.replace("-", "
                           grammar['follow_sets'].items()}
 # grammar['non_terminals'] = [nt.replace("-", "_") for nt in grammar["non_terminals"]]
 
-transition_diagrams = {
-    "program": {
-        ("0", "declaration_list"): "1"  # final
-    },
-    "declaration_list": {
-        ("2", "declaration"): 3,
-        ("3", "declaration_list"): 4,
-        ("2", "epsilon"): 4
-    },
-    "declaration": {
-        ("5", "declaration_initial"): 6,
-        ("6", "declaration_prime"): 7
-
-    },
-    "declaration_initial": {
-        ("8", "type_specifier"): 9,
-        ("9", "id"): 10
-
-    },
-
-}
+# transition_diagrams = {
+#     "program": {
+#         ("0", "declaration_list"): "1"  # final
+#     },
+#     "declaration_list": {
+#         ("2", "declaration"): 3,
+#         ("3", "declaration_list"): 4,
+#         ("2", "epsilon"): 4
+#     },
+#     "declaration": {
+#         ("5", "declaration_initial"): 6,
+#         ("6", "declaration_prime"): 7
+#
+#     },
+#     "declaration_initial": {
+#         ("8", "type_specifier"): 9,
+#         ("9", "id"): 10
+#
+#     },
+#
+# }
 transition_diagrams = {
     "PROGRAM": [
         [(1, "DECLARATION_LIST")],
@@ -2898,6 +2898,11 @@ transition_diagrams = {
         [(3, "ARG_LIST_PRIME")]
     ]
 }
+transition_diagrams = {k.lower(): v for k, v in transition_diagrams.items()}
+for key in transition_diagrams.keys():
+    transition_diagrams[key] = [
+        [(first, second.lower() for first, second in tup.items() for tup in inner_list) for inner_list in list] for list
+        in transition_diagrams[key]]
 
 
 def to_tuple(t):
