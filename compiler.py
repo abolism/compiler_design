@@ -1,15 +1,16 @@
 """
 C- compiler
 Compiler Design | Sharif University of Technology
-Abolfazl Eshagh    9910105
 """
 import os
 
 from parser import Parser
 from scanner import Scanner, State
 from parser import HeapManager, SymbolTable
-heap_manager=HeapManager()
-symbol_table=SymbolTable(heap_manager)
+
+heap_manager = HeapManager()
+symbol_table = SymbolTable(heap_manager)
+
 
 class Reader:
     def __init__(self, file):
@@ -33,15 +34,18 @@ class Reader:
         if line:
             self.line_number += 1
         return line
+
+
 from parser import HeapManager, SymbolTable
 # from intercode_gen import CodeGenerator
 from parser import CodeGenerator
+
 list_needed_files = ["output", "input", "semantic_errors"]
 other_list = []
 for i in range(10):
-    list_needed_files += [f"test/Fixed_TestCases_3/TestCases/T{i+1}/input"]
-    list_needed_files += [f"test/Fixed_TestCases_3/TestCases/T{i+1}/expected"]
-    list_needed_files += [f"tester/results/result{i+1}"]
+    list_needed_files += [f"test/Fixed_TestCases_3/TestCases/T{i + 1}/input"]
+    list_needed_files += [f"test/Fixed_TestCases_3/TestCases/T{i + 1}/expected"]
+    list_needed_files += [f"tester/results/result{i + 1}"]
 list_needed_files += [f"tester/output"]
 list_needed_files += ["tester/out"]
 list_needed_files += ["out"]
@@ -54,6 +58,8 @@ list_needed_files += ["out"]
 # list_needed_files += other_list
 # list_needed_files.append("tester/results/output.txt")
 print("this is list_needed_files", list_needed_files)
+
+
 def create_file_by_mode(name, mode, encoding='utf-8'):
     name_pure = name.split(".")[0]
     # print("for name:", name, "we get:" ,name_pure)
@@ -71,6 +77,7 @@ class DummyFile:
 
     def close(self):
         pass
+
 
 in_file = create_file_by_mode("input.txt", "r")
 out_file = create_file_by_mode("tokens.txt", "w+")
@@ -97,12 +104,8 @@ parser.run()
 
 code_generator.write_pb_to_file(generated_code_file, semantic_errors_file)
 
-
-
-
 # tester()
 # print("test finished")
-
 
 
 in_file.close()
@@ -117,6 +120,7 @@ print("test finished")
 # import vm as vm
 import shutil
 import filecmp
+
 # def tester():
 #     out_file = create_file_by_mode("tokens.txt", "w+")
 #     lex_file = create_file_by_mode("lexical_errors.txt", "w+")

@@ -136,6 +136,7 @@ from scanner import KEYWORD, SYMBOL
 from symbol_table import Address
 from symbol_table import Symbol_Table
 
+
 class OPERATIONS(Enum):
     ADD = "ADD"
     MULT = "MULT"
@@ -450,8 +451,8 @@ class PB:
         self.address.all_addresses.append(self.address.last_tmp)
         return Address(self.address.last_tmp.address)
 
-    def get_next_addr(self,addr):
-        return self.address.all_addresses[self.address.all_addresses.index(addr)+1]
+    def get_next_addr(self, addr):
+        return self.address.all_addresses[self.address.all_addresses.index(addr) + 1]
 
     def get_type(self, addr):
         next_addr = self.get_next_addr(addr)
@@ -479,7 +480,7 @@ class SemanticAnalyzer:
 
 # main class
 class CodeGenerator:
-    def __init__(self, scanner: Scanner, parser: Parser): #, address : Address):
+    def __init__(self, scanner: Scanner, parser: Parser):  # , address : Address):
         self.ss = SS()
         self.address = Address.get_instance()
         self.pb = PB()

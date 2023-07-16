@@ -24,8 +24,9 @@ from enum import Enum
 from symbol_table import Address
 from symbol_table import Symbol_Table
 
-KEYWORD= "KEYWORD"
-SYMBOL= "SYMBOL"
+KEYWORD = "KEYWORD"
+SYMBOL = "SYMBOL"
+
 
 # it is not used actually
 class OPERATIONS(Enum):
@@ -88,6 +89,7 @@ class SS:
     def __str__(self):
         return str(self.stack)
 
+
 kind_key = "kind"
 type_key = "type"
 address_key = "address"
@@ -97,6 +99,7 @@ lexeme_key = "lexeme"
 invocation_address_key = "invocation_address"
 return_address_key = "return_address"
 return_value_key = "return_value"
+
 
 # class Address:
 #     def __init__(self, address):
@@ -247,12 +250,14 @@ return_value_key = "return_value"
 #
 #
 class PB:
-    instance : Optional['PB'] = None
+    instance: Optional['PB'] = None
+
     @staticmethod
     def get_instance():
         if PB.instance == None:
             PB.instance = PB()
         return PB.instance
+
     def __init__(self):
         self.block = []
         self.line = 0
@@ -357,8 +362,8 @@ class PB:
         self.address.all_addresses.append(self.address.last_tmp)
         return self.address.last_tmp
 
-    def get_next_addr(self,addr):
-        return self.address.all_addresses[self.address.all_addresses.index(addr)+1]
+    def get_next_addr(self, addr):
+        return self.address.all_addresses[self.address.all_addresses.index(addr) + 1]
 
     def get_type(self, addr):
         next_addr = self.get_next_addr(addr)
@@ -375,10 +380,11 @@ class PB:
                 if row(k) == None:
                     row[k] = "\t"
             if row(0) == '+' or row(0) == '-' or row(0) == '*' or row(0) == '<' or row(0) == '==' or row(0) == ':=':
-                    row[0] = self.modify(j,row[0],row[1],row[2],row[3])
+                row[0] = self.modify(j, row[0], row[1], row[2], row[3])
 
         for l in range(len(self.block)):
             self.block[l] = f"{self.block[l][0], self.block[l][1], self.block[l][2], self.block[l][3]}"
+
 
 # to be refactored
 
@@ -396,14 +402,16 @@ class SemanticAnalyzer:
         self.all_errors.pop()
         self.num_semantic_errors -= 1
 
-class HeapManager:
 
+class HeapManager:
     instance: Optional['HeapManager'] = None
+
     @staticmethod
     def get_instance():
         if HeapManager.instance == None:
             HeapManager.instance = HeapManager()
         return HeapManager.instance
+
     def __init__(self):
         self.first_free = 500
         self.variables = {}
@@ -442,13 +450,16 @@ class TempVariable:
         self.type_name = type_name
         self.address = address
 
+
 class SymbolTable:
-    instance : Optional['Symbol_Table'] = None
+    instance: Optional['Symbol_Table'] = None
+
     @staticmethod
     def get_instance(heap_manager):
         if SymbolTable.instance == None:
             SymbolTable.instance = SymbolTable(heap_manager)
         return SymbolTable.instance
+
     def __init__(self, heap_manager) -> None:
         # row properties are id, lexeme, proc/func/var/param (kind), No. Arg/Cell (attributes), type, scope, address
         self.address_to_row = {}
@@ -579,6 +590,7 @@ class SymbolTable:
 
     def get_last_row_index(self):
         return len(self.table) - 1
+
 
 # from symbol_table import SymbolTable
 # from heap_manager import HeapManager
@@ -1246,22 +1258,6 @@ class CodeGenerator:
         self.semantic_stack.pop()
         breaks_array.reverse()
         self.semantic_stack.extend(breaks_array)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # # main class
@@ -3181,31 +3177,6 @@ class Nonterminal:
         if token_name in self.follows:
             return self.epsilon_rule  # it's either None or one of the rules that has epsilon in its first set
         return None
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # class Parser:
 #     # instance : Optional['Parser'] = None

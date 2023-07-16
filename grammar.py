@@ -1,5 +1,4 @@
-
-action_symbols=[
+action_symbols = [
     "#call_main",
     "#p_type",
     "#declare_id",
@@ -745,4 +744,3 @@ rules = {
     'Arg-list': [['Expression', 'Arg-list-prime']],
     'Arg-list-prime': [[',', 'Expression', 'Arg-list-prime'], ['epsilon']]
 }
-

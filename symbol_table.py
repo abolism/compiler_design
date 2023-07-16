@@ -56,8 +56,9 @@ class Address:
         self.all_addresses.append(self.last_tmp)
         # return Address(self.last_tmp.address)
         return self.last_tmp
-    def get_next_addr(self,addr):
-        return self.all_addresses[self.all_addresses.index(addr)+1]
+
+    def get_next_addr(self, addr):
+        return self.all_addresses[self.all_addresses.index(addr) + 1]
 
     def get_type(self, addr):
         next_addr = self.get_next_addr(addr)
@@ -68,7 +69,7 @@ class Address:
 
 
 class Symbol_Table:
-    instance : Optional["Symbol_Table"] = None
+    instance: Optional["Symbol_Table"] = None
 
     @staticmethod
     def get_instance():
@@ -206,12 +207,14 @@ class Symbol_Table:
 
 
 class PB:
-    instance : Optional['PB'] = None
+    instance: Optional['PB'] = None
+
     @staticmethod
     def get_instance():
         if PB.instance is None:
             PB.instance = PB()
         return PB.instance
+
     def __init__(self):
         self.block = []
         self.line = 0
@@ -314,8 +317,8 @@ class PB:
         self.all_addresses.append(self.last_tmp)
         return self.last_tmp
 
-    def get_next_addr(self,addr):
-        return self.all_addresses[self.all_addresses.index(addr)+1]
+    def get_next_addr(self, addr):
+        return self.all_addresses[self.all_addresses.index(addr) + 1]
 
     def get_type(self, addr):
         next_addr = self.get_next_addr(addr)

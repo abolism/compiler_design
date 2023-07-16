@@ -207,7 +207,7 @@ class Scanner:
                 self.end_pnt -= 1
             # the id of eof state is 0
             if next_state_id == 0:
-                return ('eof', '$'), self.line_number + 1 # todo fine?
+                return ('eof', '$'), self.line_number + 1  # todo fine?
             if next_state_id == -1:
                 self.handle_error(state_id, next_char)
                 self.start_pnt = self.end_pnt + 1
@@ -315,34 +315,6 @@ class Scanner:
                 text = text[:-1] + "\n"
 
         self.lex_file.write(text)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # # import logging  # Just for logging, you can remove it
 # import string
