@@ -1,5 +1,5 @@
 """
-C- compiler
+a compiler for C-Minus which is a simplified version of C language
 Compiler Design | Sharif University of Technology
 """
 import os
